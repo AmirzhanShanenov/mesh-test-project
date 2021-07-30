@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"
+  db:
+    ports:
+      - "6080:3306"
+  adminer:
+    ports:
+      - "8001:80"
+  rabbitmq3:
+    ports:
+      - "15672:15672"
+  redis:
+    ports:
+      - "6379:6379"
