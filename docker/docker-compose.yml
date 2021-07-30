@@ -1,0 +1,37 @@
+version: '3.7'
+
+volumes:
+  db_data:
+
+services:
+  php-fpm:
+    image: fromsi/php-fpm
+    volumes:
+      - ../:/var/www
+      - ./php-fpm/php.ini:/usr/local/etc/php/conf.d/40-custom.ini
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ../:/var/www
+      - ./nginx/:/etc/nginx/conf.d
+    depends_on:
+      - php-fpm
+  db:
+    image: yobasystems/alpine-mariadb
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=docker
+  adminer:
+    image: dehy/adminer
+  rabbitmq3:
+    image: rabbitmq:3-management
+    environment:
+        RABBITMQ_ERLANG_COOKIE: 'secret cookie here'
+    depends_on:
+      - php-fpm
+  redis:
+      image: redis:rc-alpine
+      volumes:
+          - ./redis:/data
